@@ -1,16 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import ProductForm from "@/components/ProductForm";
 import ResultDisplay from "@/components/ResultDisplay";
 import HistoryPanel from "@/components/HistoryPanel";
 import UsageBar from "@/components/UsageBar";
+import LandingPage from "@/components/LandingPage";
 import type { GenerateResponse } from "@/types";
 
 export default function Home() {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn, isLoaded, user } = useUser();
+
+  if (isLoaded && !isSignedIn) return <LandingPage />;
   const [result, setResult] = useState<GenerateResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -91,8 +94,7 @@ export default function Home() {
             </p>
           </div>
 
-          {isSignedIn ? (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 px-8 py-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 px-8 py-8">
               <ProductForm
                 onResult={handleResult}
                 onLoading={setIsLoading}
@@ -123,24 +125,8 @@ export default function Home() {
                 </div>
               )}
             </div>
-          ) : (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 px-8 py-12 text-center">
-              <div className="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-              <h2 className="text-lg font-semibold text-slate-800 mb-1">Sign in to generate copy</h2>
-              <p className="text-slate-500 text-sm mb-6">Create an account or sign in to start generating premium product descriptions.</p>
-              <SignInButton mode="modal">
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors text-sm">
-                  Sign in to get started
-                </button>
-              </SignInButton>
-            </div>
-          )}
 
-          {isSignedIn && isLimitReached && (
+          {isLimitReached && (
             <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-6 py-5">
               <div className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -172,7 +158,7 @@ export default function Home() {
             </div>
           )}
 
-          {isSignedIn && error && !isLimitReached && (
+          {error && !isLimitReached && (
             <div className="mt-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-5 py-4">
               <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -181,13 +167,11 @@ export default function Home() {
             </div>
           )}
 
-          {isSignedIn && <ResultDisplay result={result} isLoading={isLoading} />}
+          <ResultDisplay result={result} isLoading={isLoading} />
 
-          {isSignedIn && (
-            <HistoryPanel onSelect={setResult} refreshTrigger={historyTrigger} />
-          )}
+          <HistoryPanel onSelect={setResult} refreshTrigger={historyTrigger} />
 
-          {isSignedIn && !waitlistJoined && (
+          {!waitlistJoined && (
             <div className="mt-6 rounded-xl border border-indigo-100 bg-indigo-50 px-6 py-4 flex items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold text-indigo-800">Pro plan coming soon</p>
@@ -203,7 +187,7 @@ export default function Home() {
             </div>
           )}
 
-          {isSignedIn && waitlistJoined && (
+          {waitlistJoined && (
             <div className="mt-6 rounded-xl border border-green-100 bg-green-50 px-6 py-4 flex items-center gap-3">
               <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
