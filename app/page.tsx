@@ -37,8 +37,8 @@ export default function Home() {
 
   async function joinWaitlist() {
     setWaitlistLoading(true);
-    await fetch("/api/waitlist", { method: "POST", credentials: "include" });
-    setWaitlistJoined(true);
+    const res = await fetch("/api/waitlist", { method: "POST", credentials: "include" });
+    if (res.ok) setWaitlistJoined(true);
     setWaitlistLoading(false);
   }
 
