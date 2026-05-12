@@ -156,6 +156,31 @@ export default function Home() {
             <HistoryPanel onSelect={setResult} refreshTrigger={historyTrigger} />
           )}
 
+          {isSignedIn && !waitlistJoined && (
+            <div className="mt-6 rounded-xl border border-indigo-100 bg-indigo-50 px-6 py-4 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-indigo-800">Pro plan coming soon</p>
+                <p className="text-xs text-indigo-600 mt-0.5">500 generations/month · brand voice · bulk CSV · API access</p>
+              </div>
+              <button
+                onClick={joinWaitlist}
+                disabled={waitlistLoading}
+                className="flex-shrink-0 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+              >
+                {waitlistLoading ? "Joining..." : "Join waitlist"}
+              </button>
+            </div>
+          )}
+
+          {isSignedIn && waitlistJoined && (
+            <div className="mt-6 rounded-xl border border-green-100 bg-green-50 px-6 py-4 flex items-center gap-3">
+              <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <p className="text-sm font-medium text-green-800">You're on the list — we'll email you when Pro launches.</p>
+            </div>
+          )}
+
           <p className="mt-8 text-center text-xs text-slate-400">
             Powered by Claude AI · Built with Next.js
           </p>
