@@ -95,6 +95,28 @@ export default function Home() {
                 disabled={usage !== null && usage.used >= usage.limit}
               />
               {usage && <UsageBar used={usage.used} limit={usage.limit} />}
+              {!waitlistJoined && (
+                <div className="mt-5 pt-5 border-t border-slate-100 flex items-center justify-between gap-4">
+                  <p className="text-xs text-slate-400">
+                    Pro plan coming soon — 500 generations/month
+                  </p>
+                  <button
+                    onClick={joinWaitlist}
+                    disabled={waitlistLoading}
+                    className="flex-shrink-0 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors disabled:opacity-50"
+                  >
+                    {waitlistLoading ? "Joining..." : "Join waitlist →"}
+                  </button>
+                </div>
+              )}
+              {waitlistJoined && (
+                <div className="mt-5 pt-5 border-t border-slate-100 flex items-center gap-2 text-xs text-green-600 font-medium">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  You're on the Pro waitlist.
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 px-8 py-12 text-center">
