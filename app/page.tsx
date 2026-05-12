@@ -32,6 +32,15 @@ export default function Home() {
   }
 
   const isLimitReached = error === "LIMIT_REACHED";
+  const [waitlistJoined, setWaitlistJoined] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+
+  async function joinWaitlist() {
+    setWaitlistLoading(true);
+    await fetch("/api/waitlist", { method: "POST", credentials: "include" });
+    setWaitlistJoined(true);
+    setWaitlistLoading(false);
+  }
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -108,10 +117,25 @@ export default function Home() {
                 </svg>
                 <div>
                   <p className="text-sm font-semibold text-amber-800">You've used all 10 free generations this month</p>
-                  <p className="text-sm text-amber-700 mt-0.5">Upgrade to Pro for 500 generations/month, full history, and tone selector priority.</p>
-                  <button className="mt-3 inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
-                    Upgrade to Pro — $19/mo
-                  </button>
+                  <p className="text-sm text-amber-700 mt-0.5">
+                    Pro plan coming soon — 500 generations/month, priority access, and more.
+                  </p>
+                  {waitlistJoined ? (
+                    <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-green-700">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      You're on the list — we'll email you when Pro launches.
+                    </div>
+                  ) : (
+                    <button
+                      onClick={joinWaitlist}
+                      disabled={waitlistLoading}
+                      className="mt-3 inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-300 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                    >
+                      {waitlistLoading ? "Joining..." : "Join the Pro waitlist"}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
