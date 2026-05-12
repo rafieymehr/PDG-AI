@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 import ProductForm from "@/components/ProductForm";
 import ResultDisplay from "@/components/ResultDisplay";
 import HistoryPanel from "@/components/HistoryPanel";
@@ -56,9 +57,12 @@ export default function Home() {
         <div className="flex items-center gap-3">
           {isSignedIn ? (
             <>
-              <span className="text-sm text-slate-500 hidden sm:block">
+              <Link
+                href="/profile"
+                className="text-sm text-slate-500 hover:text-indigo-600 transition-colors hidden sm:block"
+              >
                 {user.primaryEmailAddress?.emailAddress}
-              </span>
+              </Link>
               <UserButton />
             </>
           ) : (
