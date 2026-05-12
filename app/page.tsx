@@ -19,9 +19,14 @@ export default function Home() {
 
   useEffect(() => {
     if (!isSignedIn) return;
-    fetch("/api/usage")
+    fetch("/api/profile")
       .then((r) => r.json())
-      .then((data) => { if (data.used !== undefined) setUsage(data); });
+      .then((data) => {
+        if (data.usedThisMonth !== undefined) {
+          setUsage({ used: data.usedThisMonth, limit: data.limit });
+        }
+        if (data.onWaitlist) setWaitlistJoined(true);
+      });
   }, [isSignedIn]);
 
   function handleResult(r: GenerateResponse) {
