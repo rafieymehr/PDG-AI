@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import ProductForm from "@/components/ProductForm";
 import ResultDisplay from "@/components/ResultDisplay";
